@@ -1,14 +1,22 @@
 from flask import Flask
-from flask_restful import Api, Resource
+from flask_restful import Api, Resource, reqparse
 
 app = Flask(__name__)
 api = Api(app)
 
-class HelloWorld(Resource):
-    def get(self, name, test):
-        return {"name": name, "test": test}
+quote_put_args = reqparse.RequestParser()
+quote_put_args.add_argument("author", type=str, help="name of author")
+quote_put_args.add_argument("quote", type=str, help="quote of the author")
 
-api.add_resource(HelloWorld, "/helloworld/<string:name>/<int:test>")
+quotes = {}
 
+class Quote(Resource):
+    def get(self, quote_id):
+        return quotes[quote_id]
+
+    def put(self, quote_id):    
+        return
+
+api.add_resource(Quote, "/quote/<int:quote_id>")
 if __name__ == "__main__":
     app.run(debug=True)
