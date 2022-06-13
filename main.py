@@ -5,8 +5,8 @@ app = Flask(__name__)
 api = Api(app)
 
 quote_put_args = reqparse.RequestParser()
-quote_put_args.add_argument("author", type=str, help="name of author", required=True)
-quote_put_args.add_argument("quote", type=str, help="quote of the author", required=True)
+quote_put_args.add_argument("author", type=str, help="name of author")
+quote_put_args.add_argument("quote", type=str, help="quote of the author")
 
 quotes = {}
 
