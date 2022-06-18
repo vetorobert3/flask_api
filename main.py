@@ -1,8 +1,19 @@
 from flask import Flask
 from flask_restful import Api, Resource, reqparse, abort
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 api = Api(app)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+db = SQLAlchemy(app)
+
+class QuoteModel(db.Model):
+    id =  db.Column(db.Integer, primary_key=True)
+    author = db.Column(db.String(144), nullable=False)
+    quote = db.Column(db.String(144), nullable=False)
+
+    def __repr__(self):
+        return f"Quote(author = {author}, quote = {quote})"
 
 quote_put_args = reqparse.RequestParser()
 quote_put_args.add_argument("author", type=str, help="name of author")
