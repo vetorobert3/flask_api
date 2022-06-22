@@ -15,10 +15,5 @@ for i in range(len(data)):
 
 input()
 
-response = requests.delete(BASE + "quote/0")
-print(response)
-
-input()
-
-response = requests.get(BASE + "quote/2")
+response = requests.get(BASE + "quote/8")
 print(response.json())

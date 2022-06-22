@@ -1,5 +1,5 @@
 from flask import Flask
-from flask_restful import Api, Resource, reqparse, abort
+from flask_restful import Api, Resource, reqparse, abort, fields, marshal_with
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -19,26 +19,31 @@ quote_put_args = reqparse.RequestParser()
 quote_put_args.add_argument("author", type=str, help="name of author")
 quote_put_args.add_argument("quote", type=str, help="quote of the author")
 
-quotes = {}
-
-def abort_if_quote_id_doesnt_exist(quote_id):
-    if quote_id not in quotes:
-        abort(404, message="Could not find quote...")
-
-def abort_if_quote_exists(quote_id):
-    if quote_id in quotes:
-        abort(409, message="Quote already exists with that id...")
+resource_fields = {
+    'id': fields.Integer,
+    'author': fields.String,
+    'quote': fields.String
+}
 
 class Quote(Resource):
+    @marshal_with(resource_fields)
     def get(self, quote_id):
-        abort_if_quote_id_doesnt_exist(quote_id)
-        return quotes[quote_id]
+        result = QuoteModel.query.filter_by(id=quote_id).first()
+        if not result:
+            abort(404, message="Could not find quote with that id...")
+        return result
 
+    @marshal_with(resource_fields)
     def put(self, quote_id):
-        abort_if_quote_exists(quote_id)
         args = quote_put_args.parse_args()
-        quotes[quote_id] = args
-        return quotes[quote_id], 201
+        result = QuoteModel.query.filter_by(id=quote_id).first()
+        if result:
+            abort(409, message="Quote id taken...")
+
+        quote = QuoteModel(id=quote_id, author=args['author'], quote=args['quote']) 
+        db.session.add(quote)
+        db.session.commit()
+        return quote, 201
 
     def delete(self, quote_id):
         abort_if_quote_id_doesnt_exist(quote_id)
