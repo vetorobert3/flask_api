@@ -16,8 +16,12 @@ class QuoteModel(db.Model):
         return f"Quote(author = {author}, quote = {quote})"
 
 quote_put_args = reqparse.RequestParser()
-quote_put_args.add_argument("author", type=str, help="name of author")
-quote_put_args.add_argument("quote", type=str, help="quote of the author")
+quote_put_args.add_argument("author", type=str, help="name of author", required=True)
+quote_put_args.add_argument("quote", type=str, help="quote of the author", required=True)
+
+quote_update_args = reqparse.RequestParser()
+quote_update_args.add_argument("author", type=str, help="name of author")
+quote_update_args.add_argument("quote", type=str, help="quote of the author")
 
 resource_fields = {
     'id': fields.Integer,
@@ -45,10 +49,29 @@ class Quote(Resource):
         db.session.commit()
         return quote, 201
 
+    @marshal_with(resource_fields)
+    def patch(self, quote_id):
+        args = quote_update_args.parse_args()
+        result = QuoteModel.query.filter_by(id=quote_id).first()
+        if not result:
+            abort(404, message="Quote doesn't exist, cannot update...")
+        
+        if args["author"]:
+            result.author = args['author']
+        if args["quote"]:
+            result.quote = args["quote"]
+
+        db.session.commit()
+
+        return result
+
+    @marshal_with(resource_fields)
     def delete(self, quote_id):
-        abort_if_quote_id_doesnt_exist(quote_id)
-        del quotes[quote_id]
-        return "", 204
+        result = QuoteModel.query.filter_by(id=quote_id).first()
+        if not result:
+            abort(404, message="Could not find quote with that id...")
+        db.session.delete(result)
+        return "Quote has been deleted"
 
 api.add_resource(Quote, "/quote/<int:quote_id>")
 if __name__ == "__main__":
