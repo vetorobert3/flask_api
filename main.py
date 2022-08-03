@@ -68,11 +68,11 @@ class Quote(Resource):
     @marshal_with(resource_fields)
     def delete(self, quote_id):
         result = QuoteModel.query.filter_by(id=quote_id).first()
+        if not result:
+            abort(404, message="Could not find quote with that id...")
         if result:
             db.session.delete(result)
             db.session.commit()
-        if not result:
-            abort(404, message="Could not find quote with that id...")
         return "Quote has been deleted"
 
 api.add_resource(Quote, "/quote/<int:quote_id>")
