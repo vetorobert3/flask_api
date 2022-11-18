@@ -32,7 +32,7 @@ resource_fields = {
 class Quote(Resource):
     @marshal_with(resource_fields)
     def get(self, quote_id):
-        result = QuoteModel.query.filter_by(id=quote_id).first()
+        result = QuoteModel.query.filter_by(id=quote_id).all()
         if not result:
             abort(404, message="Could not find quote with that id...")
         return result
@@ -77,4 +77,4 @@ class Quote(Resource):
 
 api.add_resource(Quote, "/quote/<int:quote_id>")
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='127.0.0.1', port=5000, debug=True)
