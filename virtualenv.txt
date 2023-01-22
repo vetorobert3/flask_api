@@ -5,3 +5,5 @@ run in Powershell:
 then terminal is show in virtual environment
 
   (.venv)
+
+Remember to "deactivate" the venv after you are done coding
