@@ -1,9 +1,0 @@
-run in Powershell:
-
-  venv/Scripts/activate
-
-then terminal is show in virtual environment
-
-  (.venv)
-
-Remember to "deactivate" the venv after you are done coding
