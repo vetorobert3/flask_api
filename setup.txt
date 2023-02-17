@@ -1,3 +1,6 @@
+The YouTube video is here:
+https://www.youtube.com/watch?v=dam0GPOAvVI&list=PLejxqSbfT3mOG12VH5yUTyg_Ih7R7qZI_&index=18&t=3769s
+
 run in Powershell:
 
   venv/Scripts/activate
