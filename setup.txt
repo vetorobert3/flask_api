@@ -9,7 +9,7 @@ then terminal is show in virtual environment
 
   (.venv)
 
-Remember to "deactivate" the venv after you are done coding
+Remember to "deactivate" the venv in Powershell after you are done coding
 
 - First open with Powershell and get venv running
 - Use terminal in VS Code for the server (run "python main.py" to run server)
